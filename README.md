@@ -1,4 +1,4 @@
-# Entrega de Turno - Soporte Odoo
+# Reporteador de entrega de turno - Soporte Odoo
 
 Herramienta web progresiva (PWA) para la estandarización y generación de reportes de entrega de turno en el equipo de Soporte Técnico Odoo.
 
