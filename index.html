@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportify - Entrega de Turno Odoo</title>
+    <meta name="description"
+        content="Herramienta multiplataforma para la emisión y gestión de reportes de entrega de turno.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <i class="fa-solid fa-people-arrows logo-icon"></i>
+                <h1 class="logo-text">Handover</h1>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" id="nav-reports">
+                    <i class="fa-solid fa-clipboard-user"></i>
+                    <span>Entrega de Turno</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <p>Versión 1.1.0</p>
+                <p>Odoo Support</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div>
+                    <h2 id="page-title">Entrega de Turno</h2>
+                    <p class="subtitle">Soporte Técnico Odoo</p>
+                </div>
+                <div class="user-profile">
+                    <span id="current-date"></span>
+                    <div class="avatar">
+                        <i class="fa-solid fa-user-astronaut"></i>
+                    </div>
+                </div>
+            </header>
+
+
+            <!-- Report Generation View -->
+            <section id="view-reports">
+                <div class="report-builder-container">
+                    <div class="form-panel glass-panel">
+                        <h3>Reporte de Entrega de Turno - Soporte Odoo</h3>
+                        <form id="report-form">
+                            <!-- Datos Generales -->
+                            <div class="form-group">
+                                <label for="report-author">Responsable del Turno</label>
+                                <select id="report-author" required>
+                                    <option value="" disabled selected>Selecciona el responsable...</option>
+                                    <option value="Mario Yael Gordillo Garcia">Mario Yael Gordillo Garcia</option>
+                                    <option value="Allan Casaos Meraz">Allan Casaos Meraz</option>
+                                </select>
+                            </div>
+
+                            <!-- Resumen del día -->
+                            <h4 class="section-subtitle">Resumen del Día</h4>
+                            <div class="form-group">
+                                <label for="report-context">Contexto de la jornada</label>
+                                <input type="text" id="report-context"
+                                    placeholder='Ej: "Día tranquilo con foco en ajustes..."' required>
+                            </div>
+                            <div class="form-group grid-2-cols">
+                                <div>
+                                    <label for="report-state">Estado general</label>
+                                    <select id="report-state">
+                                        <option value="Tranquilo">Tranquilo</option>
+                                        <option value="Normal">Normal</option>
+                                        <option value="Pesado">Pesado</option>
+                                        <option value="Caótico">Caótico</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="report-event">Evento principal</label>
+                                    <input type="text" id="report-event"
+                                        placeholder="Ej: Caída intermitente de servicios..." required>
+                                </div>
+                            </div>
+
+                            <!-- Gestión de tickets -->
+                            <h4 class="section-subtitle">Gestión de Tickets (Flujo de Trabajo)</h4>
+                            <div id="tickets-container">
+                                <!-- Dynamic tickets will go here -->
+                            </div>
+                            <button type="button" id="btn-add-ticket" class="btn-secondary">
+                                <i class="fa-solid fa-plus"></i> Agregar Ticket
+                            </button>
+
+                            <!-- Consultas y Capacitaciones -->
+                            <h4 class="section-subtitle">💡 Consultas y Capacitaciones (Sin Ticket)</h4>
+                            <div class="form-group">
+                                <label for="report-notes">Notas para el compañero (Opcional)</label>
+                                <textarea id="report-notes" rows="4"
+                                    placeholder="Para que tu compañero sepa qué se habló por fuera de Jira y no le tome por sorpresa..."></textarea>
+                            </div>
+
+                            <hr style="border: 1px solid var(--border-color); margin: 32px 0;">
+
+                            <button type="button" id="btn-generate-pdf" class="btn-primary">
+                                <i class="fa-solid fa-file-pdf"></i> Generar y Guardar PDF
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Hidden template for PDF generation -->
+                    <div class="pdf-container">
+                        <div id="pdf-template" class="pdf-document">
+                            <div class="pdf-header">
+                                <div class="pdf-header-titles">
+                                    <h1>Reporte de Entrega de Turno</h1>
+                                    <h2>Soporte Odoo</h2>
+                                </div>
+                                <div class="pdf-header-meta">
+                                    <p><strong>Fecha:</strong> <span id="pdf-date-text"></span></p>
+                                    <p><strong>Saliente:</strong> <span id="pdf-author-text"></span></p>
+                                </div>
+                            </div>
+
+                            <div class="pdf-body">
+                                <!-- Resumen del Día -->
+                                <div class="pdf-section pdf-summary-box">
+                                    <h3><i class="fa-solid fa-pen-nib"></i> Resumen del Día</h3>
+                                    <p><strong>Contexto:</strong> <span id="pdf-context-text"></span></p>
+                                    <div class="pdf-summary-grid">
+                                        <p><strong>Estado General:</strong> <span id="pdf-state-text"
+                                                class="status-badge"></span></p>
+                                        <p><strong>Evento Principal:</strong> <span id="pdf-event-text"></span></p>
+                                    </div>
+                                </div>
+
+                                <!-- Gestión de Tickets -->
+                                <div class="pdf-section">
+                                    <h3>Gestión de Tickets</h3>
+                                    <table class="pdf-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="20%">Identificador</th>
+                                                <th width="30%">Estado Actual</th>
+                                                <th width="50%">Acción para el Siguiente Turno</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="pdf-tickets-table-body">
+                                            <!-- Dynamically populated rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Consultas -->
+                                <div class="pdf-section" id="pdf-queries-section">
+                                    <h3>💡 Consultas y Capacitaciones (Sin Ticket)</h3>
+                                    <p class="pdf-notes-content" id="pdf-notes-text"></p>
+                                </div>
+                            </div>
+                            <div class="pdf-footer">
+                                Generado automatizadamente por Reportify Handovers - <span id="pdf-footer-date"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- JS -->
+    <script src="script.js"></script>
+</body>
+
+</html>
