@@ -19,6 +19,9 @@
 
 <body>
     <div class="app-container">
+        <!-- Overlay de Barra Lateral (Mobile) -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
         <!-- Barra Lateral -->
         <aside class="sidebar">
             <div class="logo-container">
@@ -46,9 +49,14 @@
         <!-- Contenido Principal -->
         <main class="main-content">
             <header class="top-header">
-                <div>
-                    <h2 id="page-title">Entrega de Turno</h2>
-                    <p class="subtitle">Soporte Técnico Odoo</p>
+                <div class="header-left">
+                    <button id="mobile-menu-btn" class="mobile-menu-btn">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div>
+                        <h2 id="page-title">Reporteador</h2>
+                        <p class="subtitle">Soporte Técnico Odoo</p>
+                    </div>
                 </div>
                 <div class="user-profile">
                     <span id="current-date"></span>
@@ -63,7 +71,7 @@
             <section id="view-reports">
                 <div class="report-builder-container">
                     <div class="form-panel glass-panel">
-                        <h3>Reporte de Entrega de Turno - Soporte Odoo</h3>
+                        <h3>Reporteador - Soporte Odoo</h3>
                         <form id="report-form">
                             <!-- Datos Generales -->
                             <div class="form-group">

@@ -12,12 +12,35 @@ const navMinutas = document.getElementById('nav-minutas');
 const viewReports = document.getElementById('view-reports');
 const viewMinutas = document.getElementById('view-minutas');
 
+// Mostrar/Ocultar Menú Móvil
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const sidebar = document.querySelector('.sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+function toggleMobileMenu() {
+    sidebar.classList.toggle('open');
+    if (sidebar.classList.contains('open')) {
+        sidebarOverlay.classList.add('active');
+    } else {
+        sidebarOverlay.classList.remove('active');
+    }
+}
+
+function closeMobileMenu() {
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('active');
+}
+
+mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+sidebarOverlay.addEventListener('click', closeMobileMenu);
+
 navReports.addEventListener('click', (e) => {
     e.preventDefault();
     navReports.classList.add('active');
     navMinutas.classList.remove('active');
     viewReports.style.display = 'block';
     viewMinutas.style.display = 'none';
+    if (window.innerWidth <= 768) closeMobileMenu();
 });
 
 navMinutas.addEventListener('click', (e) => {
@@ -26,6 +49,7 @@ navMinutas.addEventListener('click', (e) => {
     navReports.classList.remove('active');
     viewMinutas.style.display = 'block';
     viewReports.style.display = 'none';
+    if (window.innerWidth <= 768) closeMobileMenu();
 });
 
 
@@ -124,6 +148,7 @@ function createAgreementElement() {
     return div;
 }
 
+// Agregar Primer Acuerdo Automáticamente
 if (agreementsContainer && btnAddAgreement) {
     agreementsContainer.appendChild(createAgreementElement());
     btnAddAgreement.addEventListener('click', () => {

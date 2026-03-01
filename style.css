@@ -88,6 +88,26 @@ body {
     position: fixed;
     height: 100vh;
     z-index: 100;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 90;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
 }
 
 .logo-container {
@@ -152,6 +172,7 @@ body {
     flex: 1;
     margin-left: 260px;
     padding: 32px 48px;
+    transition: margin-left 0.3s ease;
 }
 
 .top-header {
@@ -159,6 +180,27 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 40px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.mobile-menu-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 #page-title {
@@ -557,3 +599,63 @@ body {
     border-top: 1px solid #e2e8f0;
     padding-top: 15px;
 }
+/* Media Queries para Responsividad Móvil */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 24px 20px;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .header-left {
+        width: 100%;
+        margin-bottom: 16px;
+    }
+
+    .top-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .user-profile {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .grid-2-cols,
+    .grid-3-cols {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .ticket-fields,
+    .agreement-fields {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .form-panel {
+        padding: 20px 16px;
+    }
+
+    #page-title {
+        font-size: 1.5rem;
+    }
+
+    .ticket-item,
+    .agreement-item {
+        padding: 16px;
+    }
+}
+
