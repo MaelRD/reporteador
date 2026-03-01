@@ -189,7 +189,7 @@ body {
 }
 
 .mobile-menu-btn {
-    display: none;
+    display: none !important;
     background: none;
     border: none;
     color: var(--text-main);
@@ -599,6 +599,7 @@ body {
     border-top: 1px solid #e2e8f0;
     padding-top: 15px;
 }
+
 /* Media Queries para Responsividad Móvil */
 @media (max-width: 768px) {
     .sidebar {
@@ -615,7 +616,7 @@ body {
     }
 
     .mobile-menu-btn {
-        display: block;
+        display: block !important;
     }
 
     .header-left {
@@ -658,4 +659,3 @@ body {
         padding: 16px;
     }
 }
-
