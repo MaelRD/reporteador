@@ -30,7 +30,7 @@ body {
     overflow-x: hidden;
 }
 
-/* Utilities */
+/* Utilidades Generales */
 .glass-panel {
     background: var(--panel-bg);
     backdrop-filter: blur(12px);
@@ -70,13 +70,13 @@ body {
     color: var(--accent-danger);
 }
 
-/* Layout */
+/* Diseño Principal */
 .app-container {
     display: flex;
     min-height: 100vh;
 }
 
-/* Sidebar */
+/* Barra Lateral */
 .sidebar {
     width: 260px;
     background: var(--sidebar-bg);
@@ -147,7 +147,7 @@ body {
     line-height: 1.5;
 }
 
-/* Main Content */
+/* Contenido Principal */
 .main-content {
     flex: 1;
     margin-left: 260px;
@@ -196,9 +196,9 @@ body {
     box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
 }
 
-/* Forms and Modals */
+/* Formularios */
 
-/* Report Form */
+/* Formulario de Reporte */
 .report-builder-container {
     max-width: 800px;
     margin: 0 auto;
@@ -284,7 +284,7 @@ body {
     accent-color: var(--primary-color);
 }
 
-/* Dynamic Tickets and Agreements */
+/* Componentes: Tickets y Acuerdos */
 .ticket-item,
 .agreement-item {
     background: rgba(15, 23, 42, 0.4);
@@ -402,7 +402,7 @@ body {
     font-size: 1.125rem;
 }
 
-/* PDF Template hidden styling */
+/* Estilos de Plantillas PDF */
 .pdf-container {
     position: absolute;
     left: -9999px;

@@ -1,4 +1,4 @@
-// Current Date display
+// Mostrar Fecha Actual
 function updateDate() {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const today = new Date();
@@ -6,7 +6,7 @@ function updateDate() {
 }
 updateDate();
 
-// Navigation Logic
+// Navegación entre Vistas
 const navReports = document.getElementById('nav-reports');
 const navMinutas = document.getElementById('nav-minutas');
 const viewReports = document.getElementById('view-reports');
@@ -29,7 +29,7 @@ navMinutas.addEventListener('click', (e) => {
 });
 
 
-// Dynamic Meeting Fields Logic
+// Mostrar/Ocultar Campos de Juntas
 document.getElementById('has-meetings').addEventListener('change', function (e) {
     const container = document.getElementById('meetings-container');
     if (e.target.checked) {
@@ -39,7 +39,7 @@ document.getElementById('has-meetings').addEventListener('change', function (e) 
     }
 });
 
-// Dynamic Ticket Logic
+// Tickets Dinámicos
 let ticketCount = 0;
 const ticketsContainer = document.getElementById('tickets-container');
 const btnAddTicket = document.getElementById('btn-add-ticket');
@@ -77,7 +77,7 @@ function createTicketElement() {
     return div;
 }
 
-// Add initial ticket automatically
+// Agregar Primer Ticket Automáticamente
 ticketsContainer.appendChild(createTicketElement());
 
 btnAddTicket.addEventListener('click', () => {
@@ -91,7 +91,7 @@ window.removeTicket = function (id) {
     }
 }
 
-// Dynamic Agreements Logic
+// Acuerdos Dinámicos
 let agreementCount = 0;
 const agreementsContainer = document.getElementById('agreements-container');
 const btnAddAgreement = document.getElementById('btn-add-agreement');
@@ -140,7 +140,7 @@ window.removeAgreement = function (id) {
 
 // PDF Generation Logic
 document.getElementById('btn-generate-pdf').addEventListener('click', async () => {
-    // Collect specific fields
+    // Recolectar Campos
     const author = document.getElementById('report-author').value;
     const context = document.getElementById('report-context').value;
     const state = document.getElementById('report-state').value;
@@ -152,14 +152,14 @@ document.getElementById('btn-generate-pdf').addEventListener('click', async () =
         return;
     }
 
-    // Change button state
+    // Cambiar Estado del Botón
     const btn = document.getElementById('btn-generate-pdf');
     const originalText = btn.innerHTML;
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando PDF...';
     btn.disabled = true;
 
     try {
-        // Populate PDF placeholders
+        // Llenar Variables del PDF
         document.getElementById('pdf-date-text').textContent = new Date().toLocaleDateString('es-ES', { dateStyle: 'long' });
         document.getElementById('pdf-author-text').textContent = author;
         document.getElementById('pdf-footer-date').textContent = new Date().toLocaleString('es-ES');
@@ -167,7 +167,7 @@ document.getElementById('btn-generate-pdf').addEventListener('click', async () =
         document.getElementById('pdf-context-text').textContent = context;
         document.getElementById('pdf-event-text').textContent = event;
 
-        // Apply state styling to the PDF report
+        // Estilizar Estado General
         const stateEl = document.getElementById('pdf-state-text');
         const stateSelect = document.getElementById('report-state');
         stateEl.textContent = stateSelect.options[stateSelect.selectedIndex].text;
@@ -190,7 +190,7 @@ document.getElementById('btn-generate-pdf').addEventListener('click', async () =
             stateEl.style.border = '1px solid #fecaca';
         }
 
-        // Build dynamic ticket rows
+        // Construir Filas de Tickets
         const tbody = document.getElementById('pdf-tickets-table-body');
         tbody.innerHTML = '';
 
@@ -213,7 +213,7 @@ document.getElementById('btn-generate-pdf').addEventListener('click', async () =
             });
         }
 
-        // Manage Consultas y Capacitaciones visibility
+        // Visibilidad de Consultas y Capacitaciones
         const queriesSection = document.getElementById('pdf-queries-section');
         if (notes.trim() === '') {
             queriesSection.style.display = 'none';
@@ -222,7 +222,7 @@ document.getElementById('btn-generate-pdf').addEventListener('click', async () =
             document.getElementById('pdf-notes-text').textContent = notes;
         }
 
-        // Manage Agenda de Juntas visibility
+        // Visibilidad de Agenda de Juntas
         const meetingsSection = document.getElementById('pdf-meetings-section');
         const hasMeetings = document.getElementById('has-meetings').checked;
         if (!hasMeetings) {
@@ -243,10 +243,10 @@ document.getElementById('btn-generate-pdf').addEventListener('click', async () =
             document.getElementById('pdf-meeting-minuta').textContent = meetingMinuta || 'Sin detalles adicionales.';
         }
 
-        // Generate PDF
+        // Generar PDF
         const element = document.getElementById('pdf-template');
 
-        // Include today's date in filename
+        // Incluir Fecha en Nombre del Archivo
         const todayStr = new Date().toISOString().split('T')[0];
         const opt = {
             margin: 0,
@@ -256,10 +256,10 @@ document.getElementById('btn-generate-pdf').addEventListener('click', async () =
             jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
         };
 
-        // Render synchronous since container is securely off-screen
+        // Guardar Archivo Asegurando Carga Sincrona
         await html2pdf().set(opt).from(element).save();
 
-        // Show brief success alert
+        // Mostrar Alerta de Éxito
         setTimeout(() => alert("Reporte de entrega guardado en tus Descargas."), 500);
 
     } catch (err) {
@@ -271,7 +271,7 @@ document.getElementById('btn-generate-pdf').addEventListener('click', async () =
     }
 });
 
-// PDF Generation Logic for Minuta
+// Generación de PDF: Minuta
 const btnGenerateMinutaPdf = document.getElementById('btn-generate-minuta-pdf');
 if (btnGenerateMinutaPdf) {
     btnGenerateMinutaPdf.addEventListener('click', async () => {

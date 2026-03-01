@@ -19,7 +19,7 @@
 
 <body>
     <div class="app-container">
-        <!-- Sidebar -->
+        <!-- Barra Lateral -->
         <aside class="sidebar">
             <div class="logo-container">
                 <i class="fa-solid fa-people-arrows logo-icon"></i>
@@ -36,14 +36,14 @@
                 </a>
             </nav>
             <div class="sidebar-footer">
-                <p>Versión 1.1.0</p>
+                <p>Versión 1.2</p>
                 <p>Desarrollado por <a href="https://github.com/MaelRD" target="_blank"
                         style="color: var(--text-main); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">M.
                         <i class="fa-brands fa-github"></i></a></p>
             </div>
         </aside>
 
-        <!-- Main Content -->
+        <!-- Contenido Principal -->
         <main class="main-content">
             <header class="top-header">
                 <div>
@@ -59,7 +59,7 @@
             </header>
 
 
-            <!-- Report Generation View -->
+            <!-- Vista de Entrega de Turno -->
             <section id="view-reports">
                 <div class="report-builder-container">
                     <div class="form-panel glass-panel">
@@ -102,7 +102,7 @@
                             <!-- Gestión de tickets -->
                             <h4 class="section-subtitle">Gestión de Tickets (Flujo de Trabajo)</h4>
                             <div id="tickets-container">
-                                <!-- Dynamic tickets will go here -->
+                                <!-- Contenedor Dinámico -->
                             </div>
                             <button type="button" id="btn-add-ticket" class="btn-secondary">
                                 <i class="fa-solid fa-plus"></i> Agregar Ticket
@@ -147,7 +147,7 @@
                         </form>
                     </div>
 
-                    <!-- Hidden template for PDF generation -->
+                    <!-- Plantilla Oculta PDF Entrega de Turno -->
                     <div class="pdf-container">
                         <div id="pdf-template" class="pdf-document">
                             <div class="pdf-header">
@@ -215,7 +215,7 @@
                 </div>
             </section>
 
-            <!-- Minutas View -->
+            <!-- Vista de Minutas -->
             <section id="view-minutas" style="display: none;">
                 <div class="report-builder-container">
                     <div class="form-panel glass-panel">
@@ -256,7 +256,7 @@
                             <!-- Acuerdos -->
                             <h4 class="section-subtitle">ACUERDOS (Acciones)</h4>
                             <div id="agreements-container">
-                                <!-- Dynamic agreements will go here -->
+                                <!-- Contenedor Dinámico -->
                             </div>
                             <button type="button" id="btn-add-agreement" class="btn-secondary">
                                 <i class="fa-solid fa-plus"></i> AGREGAR ACUERDO
@@ -270,7 +270,7 @@
                         </form>
                     </div>
 
-                    <!-- Hidden template for Minuta PDF generation -->
+                    <!-- Plantilla Oculta PDF Minuta -->
                     <div class="pdf-container">
                         <div id="pdf-template-minuta" class="pdf-document">
                             <div class="pdf-header">
@@ -321,7 +321,7 @@
         </main>
     </div>
 
-    <!-- JS -->
+    <!-- Scripts -->
     <script src="script.js"></script>
 </body>
 
