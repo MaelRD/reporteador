@@ -1,4 +1,4 @@
-# Reporteador de entrega de turno - Soporte Odoo
+# Reporteador - Soporte Odoo
 
 Herramienta web progresiva (PWA) para la estandarización y generación de reportes de entrega de turno en el equipo de Soporte Técnico Odoo.
 
@@ -34,6 +34,3 @@ Herramienta web progresiva (PWA) para la estandarización y generación de repor
 - `style.css`: Estilos CSS, incluyendo variables de color y diseño Glassmorphism.
 - `script.js`: Lógica de la aplicación, manejo de formularios, generación de tickets y exportación a PDF.
 
-## Contribuciones
-
-Las contribuciones son bienvenidas. Por favor, abre un issue o envía un pull request.
