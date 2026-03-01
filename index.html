@@ -23,17 +23,23 @@
         <aside class="sidebar">
             <div class="logo-container">
                 <i class="fa-solid fa-people-arrows logo-icon"></i>
-                <h1 class="logo-text">MaelDev</h1>
+                <h1 class="logo-text">M.</h1>
             </div>
             <nav class="nav-menu">
                 <a href="#" class="nav-item active" id="nav-reports">
                     <i class="fa-solid fa-clipboard-user"></i>
                     <span>Entrega de Turno</span>
                 </a>
+                <a href="#" class="nav-item" id="nav-minutas">
+                    <i class="fa-solid fa-file-signature"></i>
+                    <span>Minutas</span>
+                </a>
             </nav>
             <div class="sidebar-footer">
                 <p>Versión 1.1.0</p>
-                <p>Odoo Support</p>
+                <p>Desarrollado por <a href="https://github.com/MaelRD" target="_blank"
+                        style="color: var(--text-main); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">M.
+                        <i class="fa-brands fa-github"></i></a></p>
             </div>
         </aside>
 
@@ -103,11 +109,34 @@
                             </button>
 
                             <!-- Consultas y Capacitaciones -->
-                            <h4 class="section-subtitle">💡 Consultas y Capacitaciones (Sin Ticket)</h4>
+                            <h4 class="section-subtitle">Consultas y Capacitaciones (Sin Ticket)</h4>
                             <div class="form-group">
                                 <label for="report-notes">Notas para el compañero (Opcional)</label>
                                 <textarea id="report-notes" rows="4"
                                     placeholder="Para que tu compañero sepa qué se habló por fuera de Jira y no le tome por sorpresa..."></textarea>
+                            </div>
+
+                            <!-- Agenda de Juntas -->
+                            <h4 class="section-subtitle">Agenda de Juntas</h4>
+                            <div class="form-group checkbox-group">
+                                <label>
+                                    <input type="checkbox" id="has-meetings">
+                                    ¿Hubo juntas o reuniones en el turno?
+                                </label>
+                            </div>
+
+                            <div id="meetings-container" style="display: none;">
+                                <div class="form-group grid-2-cols">
+                                    <div>
+                                        <label for="meeting-datetime">Fecha y Hora de la Junta</label>
+                                        <input type="datetime-local" id="meeting-datetime">
+                                    </div>
+                                    <div>
+                                        <label for="meeting-minuta">Minuta / Acuerdos</label>
+                                        <textarea id="meeting-minuta" rows="3"
+                                            placeholder="Pequeña minuta o temas tratados..."></textarea>
+                                    </div>
+                                </div>
                             </div>
 
                             <hr style="border: 1px solid var(--border-color); margin: 32px 0;">
@@ -163,12 +192,127 @@
 
                                 <!-- Consultas -->
                                 <div class="pdf-section" id="pdf-queries-section">
-                                    <h3>💡 Consultas y Capacitaciones (Sin Ticket)</h3>
+                                    <h3>Consultas y Capacitaciones (Sin Ticket)</h3>
                                     <p class="pdf-notes-content" id="pdf-notes-text"></p>
+                                </div>
+
+                                <!-- Agenda de Juntas -->
+                                <div class="pdf-section" id="pdf-meetings-section">
+                                    <h3>Agenda de Juntas</h3>
+                                    <div class="pdf-meetings-content">
+                                        <p style="margin-top: 0;"><strong>Fecha y Hora:</strong> <span
+                                                id="pdf-meeting-time"></span></p>
+                                        <p style="margin-bottom: 0;"><strong>Minuta:</strong> <span
+                                                id="pdf-meeting-minuta"></span></p>
+                                    </div>
                                 </div>
                             </div>
                             <div class="pdf-footer">
                                 Generado automatizadamente por Reportify Handovers - <span id="pdf-footer-date"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Minutas View -->
+            <section id="view-minutas" style="display: none;">
+                <div class="report-builder-container">
+                    <div class="form-panel glass-panel">
+                        <h3>MINUTA RÁPIDA</h3>
+                        <form id="minuta-form">
+                            <!-- Datos Generales -->
+                            <div class="form-group">
+                                <label for="minuta-title">Título</label>
+                                <input type="text" id="minuta-title" placeholder="Ej: Revisión de Avances Sprint 4"
+                                    required>
+                            </div>
+
+                            <div class="form-group grid-3-cols">
+                                <div>
+                                    <label for="minuta-date">Fecha</label>
+                                    <input type="date" id="minuta-date" required>
+                                </div>
+                                <div>
+                                    <label for="minuta-time">Hora</label>
+                                    <input type="time" id="minuta-time" required>
+                                </div>
+                                <div>
+                                    <label for="minuta-type">Tipo</label>
+                                    <select id="minuta-type" required>
+                                        <option value="Virtual">Virtual</option>
+                                        <option value="Presencial">Presencial</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Notas de la reunión -->
+                            <h4 class="section-subtitle">NOTAS DE LA REUNIÓN</h4>
+                            <div class="form-group">
+                                <textarea id="minuta-notes" rows="6" placeholder="Escribe aquí lo más importante..."
+                                    required></textarea>
+                            </div>
+
+                            <!-- Acuerdos -->
+                            <h4 class="section-subtitle">ACUERDOS (Acciones)</h4>
+                            <div id="agreements-container">
+                                <!-- Dynamic agreements will go here -->
+                            </div>
+                            <button type="button" id="btn-add-agreement" class="btn-secondary">
+                                <i class="fa-solid fa-plus"></i> AGREGAR ACUERDO
+                            </button>
+
+                            <hr style="border: 1px solid var(--border-color); margin: 32px 0;">
+
+                            <button type="button" id="btn-generate-minuta-pdf" class="btn-primary">
+                                <i class="fa-solid fa-check"></i> GUARDAR Y FINALIZAR
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Hidden template for Minuta PDF generation -->
+                    <div class="pdf-container">
+                        <div id="pdf-template-minuta" class="pdf-document">
+                            <div class="pdf-header">
+                                <div class="pdf-header-titles">
+                                    <h1>Minuta de Reunión</h1>
+                                    <h2 id="pdf-minuta-title-text">Título</h2>
+                                </div>
+                                <div class="pdf-header-meta">
+                                    <p><strong>Fecha:</strong> <span id="pdf-minuta-date-text"></span></p>
+                                    <p><strong>Hora:</strong> <span id="pdf-minuta-time-text"></span></p>
+                                    <p><strong>Modalidad:</strong> <span id="pdf-minuta-type-text"></span></p>
+                                </div>
+                            </div>
+
+                            <div class="pdf-body">
+                                <div class="pdf-section pdf-summary-box">
+                                    <h3><i class="fa-solid fa-list"></i> Notas de la Reunión</h3>
+                                    <p class="pdf-notes-content" id="pdf-minuta-notes-text"
+                                        style="background: transparent; border-left: none; padding: 0; margin-top: 10px;">
+                                    </p>
+                                </div>
+
+                                <div class="pdf-section">
+                                    <h3>Acuerdos (Acciones)</h3>
+                                    <table class="pdf-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="50%">Tarea / Acción</th>
+                                                <th width="25%">Responsable</th>
+                                                <th width="25%">Fecha Límite</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="pdf-agreements-table-body">
+                                            <!-- Dynamically populated rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="pdf-footer">
+                                Generado automatizadamente por Reportify Handovers - <span
+                                    id="pdf-minuta-footer-date"></span>
                             </div>
                         </div>
                     </div>

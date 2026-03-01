@@ -6,8 +6,38 @@ function updateDate() {
 }
 updateDate();
 
+// Navigation Logic
+const navReports = document.getElementById('nav-reports');
+const navMinutas = document.getElementById('nav-minutas');
+const viewReports = document.getElementById('view-reports');
+const viewMinutas = document.getElementById('view-minutas');
+
+navReports.addEventListener('click', (e) => {
+    e.preventDefault();
+    navReports.classList.add('active');
+    navMinutas.classList.remove('active');
+    viewReports.style.display = 'block';
+    viewMinutas.style.display = 'none';
+});
+
+navMinutas.addEventListener('click', (e) => {
+    e.preventDefault();
+    navMinutas.classList.add('active');
+    navReports.classList.remove('active');
+    viewMinutas.style.display = 'block';
+    viewReports.style.display = 'none';
+});
 
 
+// Dynamic Meeting Fields Logic
+document.getElementById('has-meetings').addEventListener('change', function (e) {
+    const container = document.getElementById('meetings-container');
+    if (e.target.checked) {
+        container.style.display = 'block';
+    } else {
+        container.style.display = 'none';
+    }
+});
 
 // Dynamic Ticket Logic
 let ticketCount = 0;
@@ -33,10 +63,10 @@ function createTicketElement() {
             </div>
             <div>
                 <select class="ticket-status-input">
-                    <option value="🟢 Levantado (Nuevo)">🟢 Levantado (Nuevo)</option>
-                    <option value="🟡 Pendiente Cliente">🟡 Pendiente Cliente</option>
-                    <option value="🟠 En Proceso">🟠 En Proceso</option>
-                    <option value="🔴 Bloqueado">🔴 Bloqueado</option>
+                    <option value="Levantado (Nuevo)">Levantado (Nuevo)</option>
+                    <option value="Pendiente Cliente">Pendiente Cliente</option>
+                    <option value="En Proceso">En Proceso</option>
+                    <option value="Bloqueado">Bloqueado</option>
                 </select>
             </div>
         </div>
@@ -56,6 +86,53 @@ btnAddTicket.addEventListener('click', () => {
 
 window.removeTicket = function (id) {
     const el = document.getElementById(`ticket-${id}`);
+    if (el) {
+        el.remove();
+    }
+}
+
+// Dynamic Agreements Logic
+let agreementCount = 0;
+const agreementsContainer = document.getElementById('agreements-container');
+const btnAddAgreement = document.getElementById('btn-add-agreement');
+
+function createAgreementElement() {
+    agreementCount++;
+    const div = document.createElement('div');
+    div.className = 'agreement-item';
+    div.id = `agreement-${agreementCount}`;
+
+    div.innerHTML = `
+        <div class="agreement-header">
+            <strong>Acuerdo #${agreementCount}</strong>
+            <button type="button" class="btn-remove-ticket" onclick="removeAgreement(${agreementCount})">
+                <i class="fa-solid fa-trash"></i>
+            </button>
+        </div>
+        <div class="agreement-fields">
+            <div>
+                <input type="text" class="agreement-task-input" placeholder="Tarea / Acción" required>
+            </div>
+            <div>
+                <input type="text" class="agreement-who-input" placeholder="Responsable" required>
+            </div>
+            <div>
+                <input type="date" class="agreement-date-input" required>
+            </div>
+        </div>
+    `;
+    return div;
+}
+
+if (agreementsContainer && btnAddAgreement) {
+    agreementsContainer.appendChild(createAgreementElement());
+    btnAddAgreement.addEventListener('click', () => {
+        agreementsContainer.appendChild(createAgreementElement());
+    });
+}
+
+window.removeAgreement = function (id) {
+    const el = document.getElementById(`agreement-${id}`);
     if (el) {
         el.remove();
     }
@@ -145,6 +222,27 @@ document.getElementById('btn-generate-pdf').addEventListener('click', async () =
             document.getElementById('pdf-notes-text').textContent = notes;
         }
 
+        // Manage Agenda de Juntas visibility
+        const meetingsSection = document.getElementById('pdf-meetings-section');
+        const hasMeetings = document.getElementById('has-meetings').checked;
+        if (!hasMeetings) {
+            meetingsSection.style.display = 'none';
+        } else {
+            meetingsSection.style.display = 'block';
+
+            const meetingTime = document.getElementById('meeting-datetime').value;
+            const meetingMinuta = document.getElementById('meeting-minuta').value;
+
+            let formattedTime = meetingTime;
+            if (meetingTime) {
+                const dt = new Date(meetingTime);
+                formattedTime = dt.toLocaleString('es-ES', { dateStyle: 'medium', timeStyle: 'short' });
+            }
+
+            document.getElementById('pdf-meeting-time').textContent = formattedTime || 'No especificada';
+            document.getElementById('pdf-meeting-minuta').textContent = meetingMinuta || 'Sin detalles adicionales.';
+        }
+
         // Generate PDF
         const element = document.getElementById('pdf-template');
 
@@ -172,3 +270,76 @@ document.getElementById('btn-generate-pdf').addEventListener('click', async () =
         btn.disabled = false;
     }
 });
+
+// PDF Generation Logic for Minuta
+const btnGenerateMinutaPdf = document.getElementById('btn-generate-minuta-pdf');
+if (btnGenerateMinutaPdf) {
+    btnGenerateMinutaPdf.addEventListener('click', async () => {
+        const title = document.getElementById('minuta-title').value;
+        const dateStr = document.getElementById('minuta-date').value;
+        const timeStr = document.getElementById('minuta-time').value;
+        const typeMode = document.getElementById('minuta-type').value;
+        const notes = document.getElementById('minuta-notes').value;
+
+        if (!title || !dateStr || !timeStr || !notes) {
+            alert("Por favor, completa los campos requeridos.");
+            return;
+        }
+
+        const btn = document.getElementById('btn-generate-minuta-pdf');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando PDF...';
+        btn.disabled = true;
+
+        try {
+            document.getElementById('pdf-minuta-title-text').textContent = title;
+            document.getElementById('pdf-minuta-date-text').textContent = dateStr;
+            document.getElementById('pdf-minuta-time-text').textContent = timeStr;
+            document.getElementById('pdf-minuta-type-text').textContent = typeMode;
+            document.getElementById('pdf-minuta-notes-text').textContent = notes;
+            document.getElementById('pdf-minuta-footer-date').textContent = new Date().toLocaleString('es-ES');
+
+            const tbody = document.getElementById('pdf-agreements-table-body');
+            tbody.innerHTML = '';
+
+            const agreementItems = document.querySelectorAll('.agreement-item');
+            if (agreementItems.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#94a3b8; font-weight:500;">No hay acuerdos registrados</td></tr>';
+            } else {
+                agreementItems.forEach(item => {
+                    const task = item.querySelector('.agreement-task-input').value || '-';
+                    const who = item.querySelector('.agreement-who-input').value || '-';
+                    const endDate = item.querySelector('.agreement-date-input').value || '-';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${task}</strong></td>
+                        <td>${who}</td>
+                        <td>${endDate}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            const element = document.getElementById('pdf-template-minuta');
+            const todayStr = new Date().toISOString().split('T')[0];
+            const opt = {
+                margin: 0,
+                filename: `Minuta_${title.replace(/\s+/g, '')}_${todayStr}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, logging: false },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            await html2pdf().set(opt).from(element).save();
+            setTimeout(() => alert("Minuta guardada en tus Descargas."), 500);
+
+        } catch (err) {
+            console.error("Error generating Minuta PDF:", err);
+            alert("Ocurrió un error al generar la Minuta.");
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    });
+}
