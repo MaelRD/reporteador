@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -37,9 +38,13 @@
                     <i class="fa-solid fa-file-signature"></i>
                     <span>Minutas</span>
                 </a>
+                <a href="#" class="nav-item" id="nav-qr">
+                    <i class="fa-solid fa-qrcode"></i>
+                    <span>Generador QR</span>
+                </a>
             </nav>
             <div class="sidebar-footer">
-                <p>Versión 1.2</p>
+                <p>Versión 1.3</p>
                 <p>Desarrollado por <a href="https://github.com/MaelRD" target="_blank"
                         style="color: var(--text-main); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">M.
                         <i class="fa-brands fa-github"></i></a></p>
@@ -71,7 +76,7 @@
             <section id="view-reports">
                 <div class="report-builder-container">
                     <div class="form-panel glass-panel">
-                        <h3>Reporteador - Soporte Odoo</h3>
+                        <h3>Entrega de Turno</h3>
                         <form id="report-form">
                             <!-- Datos Generales -->
                             <div class="form-group">
@@ -225,9 +230,10 @@
 
             <!-- Vista de Minutas -->
             <section id="view-minutas" style="display: none;">
+
                 <div class="report-builder-container">
                     <div class="form-panel glass-panel">
-                        <h3>MINUTA RÁPIDA</h3>
+                        <h3>Minutas</h3>
                         <form id="minuta-form">
                             <!-- Datos Generales -->
                             <div class="form-group">
@@ -323,6 +329,118 @@
                                     id="pdf-minuta-footer-date"></span>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vista de Generador QR -->
+            <section id="view-qr" style="display: none;">
+                <div class="report-builder-container qr-builder-container">
+                    <div class="form-panel glass-panel">
+                        <h3>Generador de Código QR</h3>
+                        <p class="qr-subtitle">Convierte texto, correos electrónicos o números de teléfono en un código
+                            QR listo para compartir.</p>
+
+                        <div class="qr-type-selector">
+                            <button type="button" class="qr-type-btn active" data-type="texto">
+                                <i class="fa-solid fa-font"></i> Texto
+                            </button>
+                            <button type="button" class="qr-type-btn" data-type="email">
+                                <i class="fa-solid fa-envelope"></i> Correo
+                            </button>
+                            <button type="button" class="qr-type-btn" data-type="telefono">
+                                <i class="fa-solid fa-phone"></i> Teléfono
+                            </button>
+                            <button type="button" class="qr-type-btn" data-type="url">
+                                <i class="fa-solid fa-link"></i> URL
+                            </button>
+                        </div>
+
+                        <!-- Campos dinámicos según tipo -->
+                        <div id="qr-fields">
+                            <!-- Texto -->
+                            <div class="qr-field-group" id="qr-field-texto">
+                                <div class="form-group">
+                                    <label for="qr-input-texto">Texto a codificar</label>
+                                    <textarea id="qr-input-texto" rows="4"
+                                        placeholder="Escribe cualquier texto aquí..."></textarea>
+                                </div>
+                            </div>
+                            <!-- Email -->
+                            <div class="qr-field-group" id="qr-field-email" style="display:none;">
+                                <div class="form-group">
+                                    <label for="qr-input-email">Correo electrónico</label>
+                                    <input type="email" id="qr-input-email" placeholder="ejemplo@correo.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="qr-input-subject">Asunto (Opcional)</label>
+                                    <input type="text" id="qr-input-subject" placeholder="Asunto del correo">
+                                </div>
+                                <div class="form-group">
+                                    <label for="qr-input-body">Mensaje (Opcional)</label>
+                                    <textarea id="qr-input-body" rows="3" placeholder="Cuerpo del correo..."></textarea>
+                                </div>
+                            </div>
+                            <!-- Teléfono -->
+                            <div class="qr-field-group" id="qr-field-telefono" style="display:none;">
+                                <div class="form-group">
+                                    <label for="qr-input-telefono">Número de teléfono</label>
+                                    <input type="tel" id="qr-input-telefono" placeholder="+52 55 1234 5678">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tipo de acción</label>
+                                    <div class="qr-radio-group">
+                                        <label class="qr-radio-label">
+                                            <input type="radio" name="tel-action" value="tel" checked> Llamada
+                                        </label>
+                                        <label class="qr-radio-label">
+                                            <input type="radio" name="tel-action" value="sms"> SMS / WhatsApp
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- URL -->
+                            <div class="qr-field-group" id="qr-field-url" style="display:none;">
+                                <div class="form-group">
+                                    <label for="qr-input-url">Enlace / URL</label>
+                                    <input type="url" id="qr-input-url" placeholder="https://ejemplo.com">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Opciones de personalización -->
+                        <div class="qr-options">
+                            <div class="form-group">
+                                <label for="qr-size">Tamaño del QR: <span id="qr-size-label">256px</span></label>
+                                <input type="range" id="qr-size" min="128" max="512" step="32" value="256"
+                                    class="qr-range">
+                            </div>
+                            <div class="form-group">
+                                <label for="qr-color-dark">Color oscuro</label>
+                                <input type="color" id="qr-color-dark" value="#0f172a" class="qr-color-picker">
+                            </div>
+                            <div class="form-group">
+                                <label for="qr-color-light">Color claro</label>
+                                <input type="color" id="qr-color-light" value="#ffffff" class="qr-color-picker">
+                            </div>
+                        </div>
+
+                        <button type="button" id="btn-generate-qr" class="btn-primary">
+                            <i class="fa-solid fa-qrcode"></i> Generar QR
+                        </button>
+                    </div>
+
+                    <!-- Panel de resultado QR -->
+                    <div class="qr-result-panel glass-panel" id="qr-result-panel" style="display:none;">
+                        <h4>Tu Código QR</h4>
+                        <div id="qr-canvas-container"></div>
+                        <p class="qr-data-preview" id="qr-data-preview"></p>
+                        <button type="button" id="btn-download-qr" class="btn-primary">
+                            <i class="fa-solid fa-download"></i> Descargar PNG
+                        </button>
+                        <button type="button" id="btn-new-qr" class="btn-secondary" style="margin-top: 10px;">
+                            <i class="fa-solid fa-rotate-left"></i> Generar otro
+                        </button>
                     </div>
                 </div>
             </section>

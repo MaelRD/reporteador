@@ -600,6 +600,211 @@ body {
     padding-top: 15px;
 }
 
+/* Generador QR */
+.qr-builder-container {
+    max-width: 960px;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+    align-items: start;
+}
+
+.qr-subtitle {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.qr-type-selector {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 28px;
+}
+
+.qr-type-btn {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    padding: 10px 8px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.qr-type-btn:hover {
+    color: var(--text-main);
+    border-color: var(--primary-color);
+    background: rgba(59, 130, 246, 0.08);
+}
+
+.qr-type-btn.active {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.qr-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    margin-bottom: 24px;
+}
+
+.qr-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 4px;
+    background: var(--border-color);
+    outline: none;
+    cursor: pointer;
+}
+
+.qr-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
+}
+
+.qr-color-picker {
+    width: 100%;
+    height: 42px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.6);
+    cursor: pointer;
+    padding: 4px;
+}
+
+.qr-radio-group {
+    display: flex;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.qr-radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: var(--text-main);
+    font-size: 0.9rem;
+}
+
+.qr-radio-label input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary-color);
+}
+
+/* Panel de resultado QR */
+.qr-result-panel {
+    padding: 32px 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 24px;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.qr-result-panel h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+#qr-canvas-container {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    display: inline-block;
+}
+
+#qr-canvas-container canvas,
+#qr-canvas-container img {
+    display: block;
+    border-radius: 4px;
+}
+
+.qr-data-preview {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    word-break: break-all;
+    max-width: 100%;
+    line-height: 1.4;
+    padding: 8px 12px;
+    background: rgba(15, 23, 42, 0.4);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+#btn-generate-qr {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.1rem;
+}
+
+#btn-download-qr {
+    width: 100%;
+}
+
+#btn-new-qr {
+    width: 100%;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsividad movil QR */
+@media (max-width: 900px) {
+    .qr-builder-container {
+        grid-template-columns: 1fr;
+    }
+
+    .qr-type-selector {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .qr-options {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .qr-result-panel {
+        position: static;
+    }
+}
+
 /* Media Queries para Responsividad Móvil */
 @media (max-width: 768px) {
     .sidebar {

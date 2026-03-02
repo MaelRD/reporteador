@@ -368,3 +368,141 @@ if (btnGenerateMinutaPdf) {
         }
     });
 }
+// Generador QR
+const navQr = document.getElementById('nav-qr');
+const viewQr = document.getElementById('view-qr');
+
+navQr.addEventListener('click', (e) => {
+    e.preventDefault();
+    navQr.classList.add('active');
+    navReports.classList.remove('active');
+    navMinutas.classList.remove('active');
+    viewQr.style.display = 'block';
+    viewReports.style.display = 'none';
+    viewMinutas.style.display = 'none';
+    if (window.innerWidth <= 768) closeMobileMenu();
+});
+
+// Actualizar también navReports y navMinutas para quitar nav-qr active
+navReports.addEventListener('click', () => { navQr.classList.remove('active'); });
+navMinutas.addEventListener('click', () => { navQr.classList.remove('active'); });
+
+// Selector de tipo QR
+let currentQrType = 'texto';
+const qrTypeBtns = document.querySelectorAll('.qr-type-btn');
+const qrFieldGroups = document.querySelectorAll('.qr-field-group');
+
+qrTypeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        qrTypeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentQrType = btn.dataset.type;
+
+        qrFieldGroups.forEach(g => g.style.display = 'none');
+        document.getElementById(`qr-field-${currentQrType}`).style.display = 'block';
+    });
+});
+
+// Slider de tamaño
+const qrSizeSlider = document.getElementById('qr-size');
+const qrSizeLabel = document.getElementById('qr-size-label');
+qrSizeSlider.addEventListener('input', () => {
+    qrSizeLabel.textContent = `${qrSizeSlider.value}px`;
+});
+
+// Construir datos QR según tipo
+function buildQrData() {
+    switch (currentQrType) {
+        case 'texto': {
+            const val = document.getElementById('qr-input-texto').value.trim();
+            if (!val) return null;
+            return val;
+        }
+        case 'email': {
+            const email = document.getElementById('qr-input-email').value.trim();
+            if (!email) return null;
+            const subject = encodeURIComponent(document.getElementById('qr-input-subject').value.trim());
+            const body = encodeURIComponent(document.getElementById('qr-input-body').value.trim());
+            let mailto = `mailto:${email}`;
+            const params = [];
+            if (subject) params.push(`subject=${subject}`);
+            if (body) params.push(`body=${body}`);
+            if (params.length) mailto += `?${params.join('&')}`;
+            return mailto;
+        }
+        case 'telefono': {
+            const tel = document.getElementById('qr-input-telefono').value.trim().replace(/\s+/g, '');
+            if (!tel) return null;
+            const action = document.querySelector('input[name="tel-action"]:checked').value;
+            return `${action}:${tel}`;
+        }
+        case 'url': {
+            let url = document.getElementById('qr-input-url').value.trim();
+            if (!url) return null;
+            if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+            return url;
+        }
+        default:
+            return null;
+    }
+}
+
+// Referencia global al QR para descarga
+let lastQrCanvas = null;
+
+document.getElementById('btn-generate-qr').addEventListener('click', () => {
+    const data = buildQrData();
+    if (!data) {
+        alert('Por favor, completa el campo requerido.');
+        return;
+    }
+
+    const size = parseInt(qrSizeSlider.value);
+    const colorDark = document.getElementById('qr-color-dark').value;
+    const colorLight = document.getElementById('qr-color-light').value;
+
+    const container = document.getElementById('qr-canvas-container');
+    container.innerHTML = '';
+
+    new QRCode(container, {
+        text: data,
+        width: size,
+        height: size,
+        colorDark: colorDark,
+        colorLight: colorLight,
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    // Guardar referencia al canvas generado
+    lastQrCanvas = container.querySelector('canvas');
+
+    // Mostrar vista previa del dato codificado
+    const preview = document.getElementById('qr-data-preview');
+    preview.textContent = data.length > 80 ? data.substring(0, 80) + '…' : data;
+
+    document.getElementById('qr-result-panel').style.display = 'flex';
+    document.getElementById('qr-result-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
+// Descargar QR como PNG
+document.getElementById('btn-download-qr').addEventListener('click', () => {
+    if (!lastQrCanvas) return;
+    const link = document.createElement('a');
+    link.download = 'codigo-qr.png';
+    link.href = lastQrCanvas.toDataURL('image/png');
+    link.click();
+});
+
+// Generar otro (limpiar)
+document.getElementById('btn-new-qr').addEventListener('click', () => {
+    document.getElementById('qr-result-panel').style.display = 'none';
+    document.getElementById('qr-canvas-container').innerHTML = '';
+    lastQrCanvas = null;
+    // Limpiar campos
+    document.getElementById('qr-input-texto').value = '';
+    document.getElementById('qr-input-email').value = '';
+    document.getElementById('qr-input-subject').value = '';
+    document.getElementById('qr-input-body').value = '';
+    document.getElementById('qr-input-telefono').value = '';
+    document.getElementById('qr-input-url').value = '';
+});
