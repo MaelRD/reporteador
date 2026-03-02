@@ -728,12 +728,15 @@ function openModal(dateS, shift) {
     document.getElementById('cal-modal-fecha').textContent = formatDateLabel(dateS || (shift && shift.date));
     document.getElementById('cal-del-btn').style.display = shift ? 'flex' : 'none';
 
+    overlay.style.display = 'flex';
     overlay.classList.add('open');
     document.getElementById('cal-shift-start').focus();
 }
 
 function closeModal() {
-    document.getElementById('cal-overlay').classList.remove('open');
+    const overlay = document.getElementById('cal-overlay');
+    overlay.classList.remove('open');
+    overlay.style.display = 'none';
 }
 
 function formatDateLabel(iso) {
